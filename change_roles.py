@@ -1,6 +1,9 @@
 import getpass
+import ssl
 import sys
 from pyelice import Elice, EliceResponseError
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 ORG = 'kaist'
 UID_FILENAME = 'uids.txt'
@@ -64,6 +67,7 @@ def login():
     email = input('Email: ')
     password = getpass.getpass('Password: ')
     elice.login(email, password, org=ORG)
+    return elice
 
 def main():
     elice = login()
@@ -71,9 +75,9 @@ def main():
     course_id = int(input('Course ID (https://kaist.elice.io/courses/{course_id}/): '))
     print('Which role do you want to give to the users?')
     roles_string = '/'.join(ROLES.keys())
-    role = input('Role ID (%s):' % roles_string)
+    role = input('Role ID (%s): ' % roles_string)
     power = ROLES[role]
-    force_ans = input('Do you want to give this role to the users who already has more powerful role than this (Y/N)?')
+    force_ans = input('Do you want to give this role to the users who already has more powerful role than this (Y/N)? ')
     force = force_ans.strip().lower() == 'y'
 
     print('Fetching users from the course...')
